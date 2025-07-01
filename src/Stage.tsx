@@ -107,8 +107,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             let difficultyRating:number = 0;
             const difficultyHypothesis = 'On a scale of 1-6, the difficulty of the narrator\'s actions is {}.';
             let difficultyResponse = await this.query({sequence: sequence, candidate_labels: Object.keys(difficultyMapping), hypothesis_template: difficultyHypothesis, multi_label: true });
-            console.log(`Difficulty modifier selected: ${difficultyMapping[difficultyResponse.labels[0]]}`);
             if (difficultyResponse && difficultyResponse.labels[0]) {
+                console.log(`Difficulty modifier selected: ${difficultyMapping[difficultyResponse.labels[0]]}`);
                 difficultyRating = difficultyMapping[difficultyResponse.labels[0]];
             } else {
                 difficultyRating = 0;
