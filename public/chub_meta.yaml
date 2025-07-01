@@ -12,7 +12,8 @@ Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero 
 <br>
 **What's it do?**<br>
 Add this stage from Chat Settings to turn most inputs into a generic skill check that determines your degree of success. 
-Dice will be rolled and a difficulty modifier added to determine whether you succeed or fail. 
+Dice will be rolled and a difficulty modifier added to determine whether you succeed or fail.
+<br><br>
 If the crunch just isn't the same without stats and leveling, there's always [Crunchatize Classic](https://chub.ai/extensions/Ravenok/crunchatize-77a78ffcc6a6). 
 <br><br>
 Unlike most chats, where you don't want the bot to speak or act for your character, 
@@ -26,7 +27,7 @@ This result informs the LLM how the narrative should unfold.
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
-visibility: 'PRIVATE'
+visibility: 'PUBLIC'
 
 # 'ADJACENT' | 'NONE' | 'COVER' | 'FULLSCREEN'
 # 'ADJACENT' is default. The frame will display on the side of the
