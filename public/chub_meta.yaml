@@ -2,13 +2,30 @@
 #   in which case these values can be managed in the UI.
 
 # The name of the stage.
-# project_name: "Stage Template"
+project_name: "Crunchatize Zero"
 
 # A short tagline to show in search.
-# tagline: "A base template for all stages."
+tagline: "Full Crunch. No Fluff."
+
+creator_notes: "
+Need those dice? Need 'em now? Stats just getting in the way?! Crunchatize Zero is an adrenaline shot of chance straight into your gamer veins!!<br>
+<br>
+**What's it do?**<br>
+Add this stage from Chat Settings to turn most inputs into a generic skill check that determines your degree of success.
+Dice will be rolled and a modifier added to determine whether you succeed or fail.
+<br><br>
+Unlike most chats, where you don't want the bot to speak or act for your character, 
+this stage asks you to forfeit some agency over the details of your actions; 
+the bot will be specifically instructed to take your skill check result and paraphrase your choices as it narrates, rather than accept your input as canon. 
+As a result, you may find that you are better off simply describing the nature of your words or actions and allow the bot to fill in the details.
+<br><br>
+The stage is vaguely inspired by \"Powered by the Apocalypse\" rules, where 2d6 are rolled and modifiers added or subtracted to arrive at 
+one of four degrees of success: failure, mixed success, straight success, and critical success. 
+This result informs the LLM how the narrative should unfold.
+"
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
-# visibility: 'PUBLIC'
+visibility: 'PRIVATE'
 
 # 'ADJACENT' | 'NONE' | 'COVER' | 'FULLSCREEN'
 # 'ADJACENT' is default. The frame will display on the side of the
@@ -18,24 +35,28 @@
 #   but leave the text input box.
 # 'FULLSCREEN' will make nothing below the header bar
 #   show except for your stage.
-# position: 'ADJACENT'
+position: 'NONE'
 
 # Self-explanatory.
 # tags:
-#  - 'Stage'
-#  - 'Admin'
-#  - 'Template'
-#  - 'Base'
+ - 'Stage'
+ - 'Extension'
+ - 'Add-on'
+ - 'RPG'
+ - 'Stats'
 
 # The schema of any user-supplied config.
 # If your stage requires a configuration but has no
 #   defined schema, it won't work.
 config_schema:
+  title: Crunchatize Configuration
   type: object
   properties:
-    health:
+    difficultyModifier:
+      label: Difficulty Modifier
+      description: Universal modifier added (or subtracted) from all rolls.
       type: integer
-      default: 100
+      default: 0
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
