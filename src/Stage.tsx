@@ -19,9 +19,6 @@ interface SaveState {
 }
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
-    
-    readonly defaultStat: number = 0;
-    readonly levelThresholds: number[] = [2, 5, 8, 12, 16, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 
     // message-level variables
     userState: {[key: string]: SaveState} = {};
