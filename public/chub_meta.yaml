@@ -11,17 +11,17 @@ creator_notes: "
 Need those dice? Need 'em now? Stats just getting in the way?! Crunchatize Zero is an adrenaline shot of chance straight into your gamer veins!!<br>
 <br>
 **What's it do?**<br>
-Add this stage from Chat Settings to turn most inputs into a generic skill check that determines your degree of success.
-Dice will be rolled and a modifier added to determine whether you succeed or fail.
+Add this stage from Chat Settings to turn most inputs into a generic skill check that determines your degree of success. 
+Dice will be rolled and a modifier added to determine whether you succeed or fail.  If you want stats and leveling up, there's [Crunchatize Classic](https://chub.ai/extensions/Ravenok/crunchatize-77a78ffcc6a6). 
 <br><br>
 Unlike most chats, where you don't want the bot to speak or act for your character, 
 this stage asks you to forfeit some agency over the details of your actions; 
 the bot will be specifically instructed to take your skill check result and paraphrase your choices as it narrates, rather than accept your input as canon. 
-As a result, you may find that you are better off simply describing the nature of your words or actions and allow the bot to fill in the details.
+As a result, you may find that you are better off simply describing the nature of your words or actions and allow the bot to fill in the details. 
 <br><br>
 The stage is vaguely inspired by \"Powered by the Apocalypse\" rules, where 2d6 are rolled and modifiers added or subtracted to arrive at 
 one of four degrees of success: failure, mixed success, straight success, and critical success. 
-This result informs the LLM how the narrative should unfold.
+This result informs the LLM how the narrative should unfold. 
 "
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
@@ -38,7 +38,7 @@ visibility: 'PRIVATE'
 position: 'NONE'
 
 # Self-explanatory.
-# tags:
+tags:
  - 'Stage'
  - 'Extension'
  - 'Add-on'
