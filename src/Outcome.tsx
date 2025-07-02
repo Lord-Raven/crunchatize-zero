@@ -9,10 +9,10 @@ export enum Result {
 }
 
 export const ResultDescription: {[result in Result]: string} = {
-    [Result.Failure]: `{{user}} will fail to achieve their goal and will actively sour or worsen their situation. Describe {{user}}'s actions and outcomes in your own words as you continue to propel the narrative.`,
-    [Result.MixedSuccess]: `{{user}} may achieve their goal, but in an inferior way or at some cost. Describe {{user}}'s actions and outcomes in your own words as you continue to propel the narrative.`,
-    [Result.CompleteSuccess]: `{{user}} will successfully achieve what they were attempting and improve their situation. Describe {{user}}'s actions and outcomes in your own words as you continue to propel the narrative.`,
-    [Result.CriticalSuccess]: `{{user}} will resoundingly achieve what they were attempting, dramatically improving their situation in incredible fashion or with better-than-dreamed-of results. Describe {{user}}'s actions and outcomes in your own words as you continue to propel the narrative.`,
+    [Result.Failure]: `{{user}} will fail to achieve their goal and will actively sour or worsen their situation. Describe {{user}}'s actions, dialog, and poor outcome in your own words as you continue to propel the narrative.`,
+    [Result.MixedSuccess]: `{{user}} may achieve their goal, but in an inferior way or at some cost. Describe {{user}}'s actions, dialog, and mixed outcome in your own words as you continue to propel the narrative.`,
+    [Result.CompleteSuccess]: `{{user}} will successfully achieve what they were attempting and clearly improve their situation. Describe {{user}}'s actions, dialog, and positive outcome in your own words as you continue to propel the narrative.`,
+    [Result.CriticalSuccess]: `{{user}} will resoundingly achieve what they were attempting, dramatically improving their situation in incredible fashion or with better-than-dreamed-of results. Describe {{user}}'s actions, dialog, and overwhelmingly successful outcome in your own words as you continue to propel the narrative.`,
     [Result.None]: '{{user}} took a risk-free action. Describe their actions and dialog in your own words as you continue to propel the narrative.'
 }
 
