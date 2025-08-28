@@ -24,13 +24,30 @@ export const ResultSpan: {[result in Result]: (input: string) => string} = {
     [Result.None]: (input: string) => input,
 }
 
-const emojiDice: {[key: number]: string} = {
-    1: ResultSpan["Failure"]('\u2680 1'),
-    2: ResultSpan["Mixed Success"]('\u2681 2'),
-    3: ResultSpan["Mixed Success"]('\u2682 3'),
-    4: ResultSpan["Complete Success"]('\u2683 4'),
-    5: ResultSpan["Complete Success"]('\u2684 5'),
-    6: ResultSpan["Critical Success"]('\u2685 6')
+export const ResultClass: {[result in Result]: string} = {
+    [Result.Failure]: 'failure',
+    [Result.MixedSuccess]: 'mixed',
+    [Result.CompleteSuccess]: 'success',
+    [Result.CriticalSuccess]: 'critical',
+    [Result.None]: 'none'
+}
+
+const diceEmoji: {[key: number]: string} = {
+    1: '\u2680',
+    2: '\u2681',
+    3: '\u2682',
+    4: '\u2683',
+    5: '\u2684',
+    6: '\u2685'
+}
+
+const diceClass: {[key: number]: string} = {
+    1: 'failure',
+    2: 'mixed',
+    3: 'mixed',
+    4: 'success',
+    5: 'success',
+    6: 'critical'
 }
 
 export class Outcome {
@@ -52,7 +69,24 @@ export class Outcome {
 
     getDieEmoji(side: number): string {
 
-        return emojiDice[side];
+        return diceEmoji[side];
+    }
+
+    getDieClass(side: number): string {
+        return diceClass[side];
+    }
+
+    getDifficultyClass(modifier: number): string {
+        switch(modifier) {
+            case 1:
+                return 'critical';
+            case 0:
+                return 'success';
+            case -1:
+                return 'mixed';
+            default:
+                return 'failure';
+        }
     }
 
     getDifficultyColor(modifier: number): string {

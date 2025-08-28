@@ -8,6 +8,8 @@ project_name: "Crunchatize Zero"
 tagline: "Full Crunch. No Fluff."
 
 creator_notes: "
+<i>Might break this for a little bit here; I'm adding some a template feature right now. Sorry for any inconvenience!</i><br>
+<br>
 Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero is an adrenaline shot of pure chance straight into your gamer veins!!<br>
 <br>
 **What's it do?**<br>
@@ -59,6 +61,11 @@ config_schema:
       description: Universal modifier added (or subtracted) for all rolls.
       type: integer
       default: 0
+    outcomeTemplate:
+      title: Outcome template
+      description: HTML template for displaying dice outcomes. Can use special tags in {{}}: input, has_outcome, dice1_value, dice1_class, dice1_emoji, dice2_value, dice2_class, dice2_emoji, modifier_absolute, modifier_sign, modifier_class, total, total_class, total_label. "class" is string in [failure, mixed, success, critical, none]. 
+      type: string
+      default: 
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
