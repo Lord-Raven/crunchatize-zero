@@ -25,7 +25,7 @@ const DEFAULT_OUTCOME_TEMPLATE = '<div style="--show-true: flex; --show-false: n
     '<div style="display: var(--show-{{has_outcome}}); justify-content: center;">' +
     '<span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span>' +
     '<span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span><span style="color: rgb(var(--{{dice2_class}}));"> {{dice2_value}}</span>' +
-    '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}}));"><sub>(difficulty)</sub></sup>' +
+    '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}}));"><sub><sub>(difficulty)</sub></sub></sup>' +
     '<span style="color: rgb(var(--{{total_class}}));">= {{total}} ({{total_label}})</span></div></div>';
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
