@@ -20,12 +20,12 @@ interface SaveState {
 
 const DEFAULT_OUTCOME_TEMPLATE = '<div style="--failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; margin: 1rem; ' +
     'border: 2px solid rgb(var(--{{total_class}})); border-radius: 8px; padding: 1rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; ' +
-    'font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2rem; line-height: 2rem;">' +
+    'font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2rem; line-height: 2rem; white-space: pre;">' +
     '<div style="display: flex; justify-content: center; color: #bbb; font-size: 1.5rem;"><b><i>{{content}}</b></i></div>' +
     '<div style="display: flex; justify-content: center; hidden: {{has_outcome}};">' +
-    '<span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span> <span style="color: rgb(var(--{{dice1_class}}));">{{dice1_value}}</span>' +
+    '<span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span>' +
     '<span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span> <span style="color: rgb(var(--{{dice2_class}}));">{{dice2_value}}</span>' +
-    '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}})); font-size: 1rem; vertical-align: top;">(difficulty)</sup>' +
+    '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}})); font-size: 1rem;">(difficulty)</sup>' +
     '<span style="color: rgb(var(--{{total_class}}));"> = {{total}} ({{total_label}})</span></div></div>';
 
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
