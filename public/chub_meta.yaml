@@ -76,6 +76,7 @@ font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2
 <span style=\"color: rgb(var(--{{modifier_class}}));\"> {{modifier_sign}} {{modifier_absolute}}</span><sup style=\"color: rgb(var(--{{modifier_class}})); font-size: 1rem;\">(difficulty)</sup>
 <span style=\"color: rgb(var(--{{total_class}}));\">= {{total}} ({{total_label}})</span></div></div>
 
+
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to

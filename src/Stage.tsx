@@ -142,7 +142,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         finalContent = this.replaceTags(this.outcomeTemplate, {
             "content": content,
-            "has_outcome": outcome ? 'true' : 'false',
+            "has_outcome": outcome && outcome.action && !outcome.action.free ? 'true' : 'false',
             "dice1_value": outcome ? `${outcome.dieResult1}` : '0',
             "dice1_emoji": outcome ? `${outcome.getDieEmoji(outcome.dieResult1)}` : '',
             "dice1_class": outcome ? `${outcome.getDieClass(outcome.dieResult1)}` : 'none',
