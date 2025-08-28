@@ -8,21 +8,21 @@ project_name: "Crunchatize Zero"
 tagline: "Full Crunch. No Fluff."
 
 creator_notes: |
-  Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero is an adrenaline shot of pure chance straight into your gamer veins!!<br>
+  Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero is an adrenaline shot of pure chance straight into your gamer veins!!!
   <br>
-  **What's it do?**<br>
+  **What's it do?**
   Add this stage from Chat Settings to turn most inputs into a skill check that determines your degree of success. 
   Dice will be rolled and a difficulty modifier added to determine whether you succeed or fail.
-  <br><br>
+  <br>
   If the crunch just isn't the same without stats and leveling, there's always [Crunchatize Classic](https://chub.ai/extensions/Ravenok/crunchatize-77a78ffcc6a6). 
-  <br><br>
+  <br>
   Unlike most chats, where you don't want the bot to speak or act for your character, 
   this stage asks you to forfeit some agency over the details of your actions; 
   the bot will be specifically instructed to take your skill check result and paraphrase your choices as it narrates, rather than accept your input as canon. 
   As a result, you may find that you are better off simply describing the nature of your words or actions and allow the bot to fill in the details. 
-  <br><br>
-  The stage is vaguely inspired by \"Powered by the Apocalypse\" rules, where 2d6 are rolled and modifiers added or subtracted to arrive at 
-  one of four degrees of success: failure, mixed success, straight success, and critical success. 
+  <br>
+  The stage is vaguely inspired by "Powered by the Apocalypse" rules, where 2d6 are rolled and modifiers added or subtracted to arrive at
+  one of four degrees of success: failure, mixed success, straight success, and critical success.
   This result informs the LLM how the narrative should unfold.
 
 # 'PUBLIC', 'PRIVATE', or 'UNLISTED'.
@@ -64,15 +64,7 @@ config_schema:
         HTML template for displaying dice outcomes. Can use special tags in {{}}: input, has_outcome, dice1_value, dice1_class, dice1_emoji, dice2_value, dice2_class, dice2_emoji, modifier_absolute, modifier_sign, modifier_class, total, total_class, total_label. Class is string in [failure, mixed, success, critical, none].
       type: string
       default: |
-        <div style="--failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 204, 204, 204; margin: 1rem; 
-        border: 2px solid rgb(var(--{{total_class}})); border-radius: 8px; padding: 1rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; 
-        font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2rem; line-height: 1rem; white-space: pre;">
-        <div style="display: flex; justify-content: center; color: #bbb; font-size: 1.5rem; margin-bottom: 1.5rem;"><b><i>{{content}}</b></i></div>
-        <div style="display: flex; justify-content: center; hidden: {{has_outcome}};">
-        <span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span>
-        <span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span><span style="color: rgb(var(--{{dice2_class}}));"> {{dice2_value}}</span>
-        <span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}})); font-size: 1rem;">(difficulty)</sup>
-        <span style="color: rgb(var(--{{total_class}}));">= {{total}} ({{total_label}})</span></div></div>
+        <div style="--failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 204, 204, 204; margin: 1rem; border: 2px solid rgb(var(--{{total_class}})); border-radius: 8px; padding: 1rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2rem; line-height: 1rem; white-space: pre;"><div style="display: flex; justify-content: center; color: #bbb; font-size: 1.5rem; margin-bottom: 1.5rem;"><b><i>{{content}}</b></i></div><div style="display: flex; justify-content: center; hidden: {{has_outcome}};"><span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span><span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span><span style="color: rgb(var(--{{dice2_class}}));"> {{dice2_value}}</span><span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}})); font-size: 1rem;">(difficulty)</sup><span style="color: rgb(var(--{{total_class}}));">= {{total}} ({{total_label}})</span></div></div>
 
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
