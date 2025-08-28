@@ -21,7 +21,7 @@ interface SaveState {
 const DEFAULT_OUTCOME_TEMPLATE = '<div style="--failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; border: 1px solid rgb(var(--{{total_class}})); ' +
     'border-radius: 8px; padding: 0.5rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; ' +
     'font-family: system-ui, sans-serif; font-size: 2rem; line-height: 2rem;">' +
-    '<div style="display: flex; justify-content: center; color: #bbb;><b><i>{{input}}</b></i></div>' +
+    '<div style="display: flex; justify-content: center; color: #bbb;><b><i>{{content}}</b></i></div>' +
     '<div style="display: flex; justify-content: center; hidden: {{has_outcome}};">' +
     '<span style="color: rgb(var(--{{dice1_class}}));"><span style="font-size: 2.5rem;">{{dice1_emoji}}</span> {{dice1_value}}</span>' +
     '<span style="color: rgb(var(--{{dice2_class}}));"> + <span style="font-size: 2.5rem;">{{dice2_emoji}}</span> {{dice2_value}}</span>' +
@@ -141,12 +141,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
 
         finalContent = this.replaceTags(this.outcomeTemplate, {
-            "input": content,
+            "content": content,
             "has_outcome": outcome ? 'true' : 'false',
-            "dice1_value": `${outcome?.dieResult1}` || '0',
+            "dice1_value": outcome ? `${outcome.dieResult1}` : '0',
             "dice1_emoji": outcome ? `${outcome.getDieEmoji(outcome.dieResult1)}` : '',
             "dice1_class": outcome ? `${outcome.getDieClass(outcome.dieResult1)}` : 'none',
-            "dice2_value": `${outcome?.dieResult2}` || '0',
+            "dice2_value": outcome ? `${outcome.dieResult2}` : '0',
             "dice2_emoji": outcome ? `${outcome.getDieEmoji(outcome.dieResult2)}` : '',
             "dice2_class": outcome ? `${outcome.getDieClass(outcome.dieResult2)}` : 'none',
             "modifier_absolute": takenAction ? `${Math.abs(takenAction.difficultyModifier)}` : '',
