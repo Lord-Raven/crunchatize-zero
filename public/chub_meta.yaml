@@ -8,7 +8,7 @@ project_name: "Crunchatize Zero"
 tagline: "Full Crunch. No Fluff."
 
 creator_notes: "
-Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero is an adrenaline shot of pure chance straight into your gamer veins!!!<br>
+Need those dice? Need 'em now? Stats just gettin' in the way?! Crunchatize Zero is an adrenaline shot of pure chance straight into your gamer veins!!<br>
 <br>
 **What's it do?**<br>
 Add this stage from Chat Settings to turn most inputs into a skill check that determines your degree of success. 
@@ -61,7 +61,9 @@ config_schema:
       default: 0
     outcomeTemplate:
       title: Outcome template
-      description: HTML template for displaying dice outcomes.
+      description: "
+HTML template for displaying dice outcomes. Can use special tags in {{}}: input, has_outcome, dice1_value, dice1_class, dice1_emoji, dice2_value, dice2_class, dice2_emoji, modifier_absolute, modifier_sign, modifier_class, total, total_class, total_label. Class is string in [failure, mixed, success, critical, none]. 
+"
       type: string
       default: ""
 
