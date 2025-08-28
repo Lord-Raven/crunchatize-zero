@@ -18,11 +18,11 @@ interface SaveState {
     lastOutcomePrompt: string;
 }
 
-const DEFAULT_OUTCOME_TEMPLATE = '<div style="--hide-true: none; --hide-false: block; --failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 204, 204, 204; margin: 1rem; ' +
+const DEFAULT_OUTCOME_TEMPLATE = '<div style="--show-true: flex; --show-false: none; --failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 204, 204, 204; margin: 1rem; ' +
     'border: 2px solid rgb(var(--{{total_class}})); border-radius: 8px; padding: 1rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; ' +
     'font-family: system-ui, sans-serif; text-shadow: 2px 2px 4px #0003; font-size: 2rem; line-height: 1rem; white-space: pre;">' +
     '<div style="display: flex; justify-content: center; color: #bbb; font-size: 1.5rem; margin-bottom: 1.5rem;"><b><i>{{content}}</b></i></div>' +
-    '<div style="display: flex; justify-content: center; display: var(--hide-{{has_outcome}});">' +
+    '<div style="display: var(--show-{{has_outcome}}); justify-content: center;">' +
     '<span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span>' +
     '<span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span><span style="color: rgb(var(--{{dice2_class}}));"> {{dice2_value}}</span>' +
     '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}})); font-size: 1rem;">(difficulty)</sup>' +
