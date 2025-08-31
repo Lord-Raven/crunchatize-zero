@@ -63,8 +63,7 @@ config_schema:
       title: Template Thing
       description: Testing field; ignore.
       type: string
-      default: |
-        <div style="--show-true: flex; --show-false: none; --failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 153, 153, 153; margin: 1rem; "></div>
+      default: '@template.html'
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to
