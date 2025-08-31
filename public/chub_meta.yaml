@@ -60,11 +60,11 @@ config_schema:
       type: integer
       default: 0
     anotherTestProperty:
-      title: Unused
+      title: Template Thing
       description: Testing field; ignore.
       type: string
       default: |
-        A testing String
+        <div>Some junk</div>
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to
