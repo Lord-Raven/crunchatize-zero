@@ -63,7 +63,8 @@ config_schema:
       title: Unused
       description: Testing field; ignore.
       type: string
-      default: "A Testing String"
+      default: |
+        A testing String
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to
