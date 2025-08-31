@@ -59,11 +59,11 @@ config_schema:
       description: Universal modifier added (or subtracted) for all rolls.
       type: integer
       default: 0
-    testingProperty:
+    anotherTestProperty:
       title: Unused
       description: Testing field; ignore.
       type: string
-      default: "A Testing String."
+      default: "A Testing String"
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to
