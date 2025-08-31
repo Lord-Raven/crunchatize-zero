@@ -59,16 +59,11 @@ config_schema:
       description: Universal modifier added (or subtracted) for all rolls.
       type: integer
       default: 0
-    testing:
-      title: Unused
-      description: Testing field; ignore.
+    artStyle:
+      title: Art Style
+      description: A brief description of the desired art style.
       type: string
-      default: Testing.
-    outcomeTemplate:
-      title: Outcome Template
-      type: string
-      default: Testing.
-      description: HTML template for displaying dice outcomes.
+      default: "Vibrant, visual novel style illustration, clean lines"
 # The schema of the state that you store.
 # This isn't needed even if you do store state,
 #   and is here more for future use cases to
