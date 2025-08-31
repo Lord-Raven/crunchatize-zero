@@ -61,7 +61,8 @@ config_schema:
       default: 0
     outcomeTemplate:
       title: Outcome Template
-      description: Testing field; ignore.
+      description: |
+        HTML template for displaying dice outcomes. Can use special tags in {{}}: input, has_outcome, dice1_value, dice1_class, dice1_emoji, dice2_value, dice2_class, dice2_emoji, modifier_absolute, modifier_sign, modifier_class, total, total_class, total_label. Class is string in [failure, mixed, success, critical, none].
       type: string
       default: ""
 # The schema of the state that you store.
