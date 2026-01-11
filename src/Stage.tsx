@@ -2,8 +2,11 @@ import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message, Character, User} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 import {Client} from "@gradio/client";
-import { Outcome, Result, ResultClass, ResultDescription } from "./Outcome";
+import { Outcome, Result, ResultDescription } from "./Outcome";
 import { Action } from "./Action";
+import {OutcomeProperties, OutcomeTheme, THEME_FORMATTERS} from "./OutcomeFormatter";
+import { CallToolResult } from '@modelcontextprotocol/sdk/types';
+import { z } from 'zod';
 
 type MessageStateType = any;
 
@@ -18,27 +21,17 @@ interface SaveState {
     lastOutcomePrompt: string;
 }
 
-const DEFAULT_OUTCOME_TEMPLATE = '<div style="--show-true: flex; --show-false: none; --failure: 255, 0, 0; --mixed: 255, 140, 0; --success: 60, 179, 113; --critical: 176, 224, 230; --none: 153, 153, 153; margin: 1rem; ' +
-    'border: 2px solid rgb(var(--{{total_class}})); border-radius: 8px; padding: 1rem 1rem; background: linear-gradient(to right, rgba(var(--{{total_class}}), 0.2), #0003); box-shadow: 0 2px 4px #0003; ' +
-    'font-family: system-ui, sans-serif; text-shadow: 2px 2px 2px #0009; font-size: 2rem; line-height: 1.75rem; white-space: pre-wrap; ">' +
-    '<div style="display: flex; justify-content: center; color: #ddd; font-size: 1.5rem; margin-bottom: 0.75rem;"><b><i>{{content}}</b></i></div>' +
-    '<div style="display: var(--show-{{has_outcome}}); justify-content: center;">' +
-    '<span style="color: rgb(var(--{{dice1_class}})); font-size: 3rem;">{{dice1_emoji}}</span><span style="color: rgb(var(--{{dice1_class}}));"> {{dice1_value}}</span>' +
-    '<span style="color: rgb(var(--{{dice2_class}}));"> + </span><span style="color: rgb(var(--{{dice2_class}})); font-size: 3rem;">{{dice2_emoji}}</span><span style="color: rgb(var(--{{dice2_class}}));"> {{dice2_value}}</span>' +
-    '<span style="color: rgb(var(--{{modifier_class}}));"> {{modifier_sign}} {{modifier_absolute}}</span><sup style="color: rgb(var(--{{modifier_class}}));"><sub><sub>(difficulty)</sub></sub></sup>' +
-    '<span style="color: rgb(var(--{{total_class}}));">= {{total}} ({{total_label}})</span></div></div>';
-
 export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateType, ConfigType> {
 
     // message-level variables
     userState: {[key: string]: SaveState} = {};
+    promptingUserId: string;
 
     // other
     client: any;
     users: {[key: string]: User} = {};
     characters: {[key: string]: Character} = {};
     globalModifier: number;
-    outcomeTemplate: string;
 
     constructor(data: InitialData<InitStateType, ChatStateType, MessageStateType, ConfigType>) {
         super(data);
@@ -53,12 +46,21 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         console.log(this.users);
         console.log(this.characters);
         this.globalModifier = config.difficultyModifier ?? 0;
-        this.outcomeTemplate = config.outcomeTemplate ?? DEFAULT_OUTCOME_TEMPLATE;
+        this.promptingUserId = Object.values(this.users)[0]?.anonymizedId ?? '';
 
         for (let user of Object.values(this.users)) {
             this.userState[user.anonymizedId] = this.initializeUserState();
         }
         this.setStateFromMessageState(messageState);
+
+        this.mcp.tool('ping', 'Verify that tools are available.',
+            {
+                returnThis: z.string(),
+            },
+            async ({ returnThis }): Promise<CallToolResult> => {
+                return { content: [{type: 'text', text: returnThis}] };
+            }
+        );
     }
 
     initializeUserState(): SaveState {
@@ -105,6 +107,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         let takenAction: Action|null = null;
         let finalContent: string|undefined = content;
 
+        this.promptingUserId = anonymizedId;
+
+        console.log(userMessage);
+
         if (finalContent) {
             let sequence = this.replaceTags(content,
                 {"user": anonymizedId ? this.users[anonymizedId].name : '', "char": promptForId ? this.characters[promptForId].name : ''});
@@ -116,10 +122,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 '4 (challenging and risky)': -1,
                 '5 (arduous and dangerous)': -2,
                 '6 (virtually impossible)': -3};
-            let difficultyRating:number = 0;
+            let difficultyRating:number;
             const difficultyHypothesis = 'On a scale of 1-6, the difficulty of the narrator\'s actions is {}.';
             let difficultyResponse = await this.query({sequence: sequence, candidate_labels: Object.keys(difficultyMapping), hypothesis_template: difficultyHypothesis, multi_label: true });
-            if (difficultyResponse && difficultyResponse.labels[0]) {
+            if (difficultyResponse && difficultyResponse.labels && difficultyResponse.labels.length && difficultyResponse.labels[0]) {
                 console.log(`Difficulty modifier selected: ${difficultyMapping[difficultyResponse.labels[0]] + this.globalModifier}`);
                 difficultyRating = difficultyMapping[difficultyResponse.labels[0]] + this.globalModifier;
             } else {
@@ -133,29 +139,11 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             }
         }
 
-        let outcome: Outcome|null = null;
         if (takenAction) {
             this.setLastOutcome(anonymizedId, takenAction.determineSuccess());
-            //finalContent = this.getUserState(anonymizedId).lastOutcome?.getDescription();
-            outcome = this.getUserState(anonymizedId).lastOutcome;
         }
 
-        finalContent = this.replaceTags(this.outcomeTemplate, {
-            "content": content,
-            "has_outcome": outcome && outcome.action && !outcome.action.free ? 'true' : 'false',
-            "dice1_value": outcome ? `${outcome.dieResult1}` : '0',
-            "dice1_emoji": outcome ? `${outcome.getDieEmoji(outcome.dieResult1)}` : '',
-            "dice1_class": outcome ? `${outcome.getDieClass(outcome.dieResult1)}` : 'none',
-            "dice2_value": outcome ? `${outcome.dieResult2}` : '0',
-            "dice2_emoji": outcome ? `${outcome.getDieEmoji(outcome.dieResult2)}` : '',
-            "dice2_class": outcome ? `${outcome.getDieClass(outcome.dieResult2)}` : 'none',
-            "modifier_absolute": takenAction ? `${Math.abs(takenAction.difficultyModifier)}` : '',
-            "modifier_sign": takenAction && takenAction.difficultyModifier >= 0 ? '+' : '-',
-            "modifier_class": takenAction && outcome ? `${outcome.getDifficultyClass(takenAction.difficultyModifier - this.globalModifier)}` : 'none',
-            "total": outcome ? `${outcome.total}` : '',
-            "total_class": outcome ? ResultClass[outcome.result] : 'none',
-            "total_label": outcome ? `${outcome.result}` : 'Free Action'
-        });
+        finalContent = THEME_FORMATTERS[OutcomeTheme.Nerd].formatOutcome(this.getLastOutcomeProperties(finalContent, anonymizedId), OutcomeTheme.Nerd);
 
         return {
             stageDirections: `\nCritical Instruction: ${this.replaceTags(this.getUserState(anonymizedId).lastOutcomePrompt,{
@@ -174,6 +162,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
         Object.values(this.users).forEach(user => this.getUserState(user.anonymizedId).lastOutcomePrompt = '');
 
+        console.log(botMessage);
+        // const finalContent = THEME_FORMATTERS[OutcomeTheme.Nerd].formatResponse(botMessage.content, this.getLastOutcomeProperties(botMessage.content, this.promptingUserId), OutcomeTheme.Nerd);
+
         return {
             stageDirections: null,
             messageState: this.buildMessageState(),
@@ -185,29 +176,24 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     setStateFromMessageState(messageState: MessageStateType) {
-        console.log('messageState:');
-        console.log(messageState);
-        for (let user of Object.values(this.users)) {
-            let userState = this.getUserState(user.anonymizedId);
-            if (messageState != null) {
-                let lastOutcome = messageState[user.anonymizedId]?.['lastOutcome'] ?? messageState['lastOutcome'] ?? null;
-                userState.lastOutcome = lastOutcome ? this.convertOutcome(lastOutcome) : null;
-                userState.lastOutcomePrompt = messageState[user.anonymizedId]?.['lastOutcomePrompt'] ?? messageState['lastOutcomePrompt'] ?? '';
+        if (messageState) {
+            console.log('messageState:');
+            console.log(messageState);
+            for (let user of Object.values(this.users)) {
+                let userState = this.getUserState(user.anonymizedId);
+                if (messageState != null) {
+                    let lastOutcome = messageState[user.anonymizedId]?.['lastOutcome'] ?? messageState['lastOutcome'] ?? null;
+                    userState.lastOutcome = lastOutcome ? this.convertOutcome(lastOutcome) : null;
+                    userState.lastOutcomePrompt = messageState[user.anonymizedId]?.['lastOutcomePrompt'] ?? messageState['lastOutcomePrompt'] ?? '';
+                }
+                this.userState[user.anonymizedId] = userState;
             }
-            this.userState[user.anonymizedId] = userState;
+            this.promptingUserId = messageState.promptingUserId ?? this.promptingUserId;
         }
     }
 
-    convertOutcome(input: any): Outcome {
-        return new Outcome(input['dieResult1'], input['dieResult2'], this.convertAction(input['action']));
-    }
-
-    convertAction(input: any): Action {
-        return new Action(input['description'], input['free'], input['difficultyModifier']);
-    }
-
     buildMessageState(): any {
-        let messageState: any = {};
+        let messageState: any = {promptingUserId: this.promptingUserId};
         for (let user of Object.values(this.users)) {
             let userState: { [key: string]: any } = {};
             userState['lastOutcome'] = this.getUserState(user.anonymizedId).lastOutcome ?? null;
@@ -220,6 +206,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         return messageState;
     }
 
+    convertOutcome(input: any): Outcome {
+        return new Outcome(input['dieResult1'], input['dieResult2'], this.convertAction(input['action']));
+    }
+
+    convertAction(input: any): Action {
+        return new Action(input['description'], input['free'], input['difficultyModifier']);
+    }
+
     setLastOutcome(anonymizedId: string, outcome: Outcome|null) {
         this.getUserState(anonymizedId).lastOutcome = outcome;
         this.getUserState(anonymizedId).lastOutcomePrompt = '';
@@ -230,6 +224,52 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 this.getUserState(anonymizedId).lastOutcomePrompt += `Use third-person language for {{user}}.\n`;
             }
         }
+    }
+
+    getLastOutcomeProperties(content: string, anonymizedId: string): OutcomeProperties {
+        const outcome = this.getUserState(anonymizedId).lastOutcome;
+
+        return {
+            content: content,
+            components: outcome && outcome.action ? [
+                {
+                    absolute: `${outcome.dieResult1}`,
+                    sign: '+',
+                    result: outcome.getDieClass(outcome.dieResult1),
+                    dieEmoji: `${outcome.getDieEmoji(outcome.dieResult1)}`,
+                    type: 'die'
+                },
+                {
+                    absolute: `${outcome.dieResult2}`,
+                    sign: '+',
+                    result: outcome.getDieClass(outcome.dieResult2),
+                    dieEmoji: `${outcome.getDieEmoji(outcome.dieResult2)}`,
+                    type: 'die'
+                },
+                {
+                    absolute: `${Math.abs(outcome.action.difficultyModifier)}`,
+                    sign: outcome.action.difficultyModifier >= 0 ? '+' : '-',
+                    result: outcome.getDifficultyClass(outcome.action.difficultyModifier),
+                    dieEmoji: '',
+                    type: 'modifier'
+                },
+                {
+                    absolute: `${outcome.total}`,
+                    sign: '=',
+                    result: outcome.result,
+                    dieEmoji: '',
+                    type: 'total'
+                }
+            ] : [
+                {
+                    absolute: '0',
+                    sign: '=',
+                    result: Result.None,
+                    dieEmoji: '',
+                    type: 'total'
+                }
+            ]
+        };
     }
 
     replaceTags(source: string, replacements: {[name: string]: string}) {
