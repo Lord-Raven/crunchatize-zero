@@ -52,16 +52,20 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
         this.setStateFromMessageState(messageState);
 
-        this.mcp.registerTool('ping-crunchatize-zero',
-            {
-                title: 'Ping Crunchatize Zero',
-                description: 'Returns "pong."',
-                inputSchema: {}
-            },
-            async (): Promise<CallToolResult> => {
-                return { content: [{type: 'text', text: 'pong'}] };
-            }
-        );
+        try {
+            this.mcp.registerTool('ping-crunchatize-zero',
+                {
+                    title: 'Ping Crunchatize Zero',
+                    description: 'Returns "pong."',
+                    inputSchema: {}
+                },
+                async (): Promise<CallToolResult> => {
+                    return {content: [{type: 'text', text: 'pong'}]};
+                }
+            );
+        } catch (error) {
+            console.error('Error registering tool: ', error);
+        }
 
         console.log('Crunchatize Zero constructed');
     }
