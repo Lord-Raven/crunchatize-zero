@@ -65,6 +65,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 return { content: [{type: 'text', text: returnThis}] };
             }
         );
+
+        console.log('Crunchatize Zero constructed');
     }
 
     initializeUserState(): SaveState {
