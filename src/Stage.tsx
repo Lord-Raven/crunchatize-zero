@@ -6,7 +6,6 @@ import { Outcome, Result, ResultDescription } from "./Outcome";
 import { Action } from "./Action";
 import {OutcomeProperties, OutcomeTheme, THEME_FORMATTERS} from "./OutcomeFormatter";
 import { CallToolResult } from '@modelcontextprotocol/sdk/types';
-import { z } from 'zod';
 
 type MessageStateType = any;
 
@@ -53,16 +52,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
         this.setStateFromMessageState(messageState);
 
-        this.mcp.registerTool('ping',
+        this.mcp.registerTool('ping-crunchatize-zero',
             {
-                title: 'Ping',
-                description: 'Returns the input string.',
-                inputSchema: {
-                    returnThis: z.string().describe('String to return'),
-                }
+                title: 'Ping Crunchatize Zero',
+                description: 'Returns "pong."',
+                inputSchema: {}
             },
-            async ({ returnThis }): Promise<CallToolResult> => {
-                return { content: [{type: 'text', text: returnThis}] };
+            async (): Promise<CallToolResult> => {
+                return { content: [{type: 'text', text: 'pong'}] };
             }
         );
 
