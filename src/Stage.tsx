@@ -1,7 +1,6 @@
 import {ReactElement} from "react";
 import {StageBase, StageResponse, InitialData, Message, Character, User} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
-import {Client} from "@gradio/client";
 import { Outcome, Result, ResultDescription } from "./Outcome";
 import { Action } from "./Action";
 import {OutcomeProperties, OutcomeTheme, THEME_FORMATTERS} from "./OutcomeFormatter";
@@ -27,7 +26,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     promptingUserId: string;
 
     // other
-    client: any;
     users: {[key: string]: User} = {};
     characters: {[key: string]: Character} = {};
     globalModifier: number;
@@ -82,14 +80,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     async load(): Promise<Partial<LoadResponse<InitStateType, ChatStateType, MessageStateType>>> {
-
-        try {
-            this.client = await Client.connect("Ravenok/statosphere-backend");
-        } catch (error) {
-            console.error(`Error connecting to backend.`);
-        }
-
-        console.log('Finished loading stage.');
 
         return {
             success: true,
@@ -285,21 +275,64 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         });
     }
 
+    async awaitPipeline(pipeline: string, eventId: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const url = `https://${pipeline}/${eventId}`;
+            const evtSource = new EventSource(url, {withCredentials: false});
+
+            evtSource.onmessage = (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    resolve(data);
+                    evtSource.close();
+                } catch (exception) {
+                    reject(exception);
+                }
+            };
+
+            evtSource.addEventListener("complete", (e) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    resolve(data);
+                } catch (exception) {
+                    reject(exception);
+                } finally {
+                    evtSource.close();
+                }
+            });
+
+            evtSource.onerror = (e) => {
+                evtSource.close();
+                reject(e);
+            };
+        });
+    }
+
     async query(data: any) {
         let result: any = null;
-        if (this.client) {
+        let retries = 3;
+        const pipeline = "ravenok-statosphere-backend.hf.space/gradio_api/call/predict";
+        while (retries > 0 && (!result || result.labels.length == 0)) {
             try {
-                const response = await this.client.predict("/predict", {data_string: JSON.stringify(data)});
-                result = JSON.parse(`${response.data[0]}`);
-            } catch(e) {
-                console.log(e);
+                const request = await fetch(`https://${pipeline}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({data: [JSON.stringify(data)]}),
+                    credentials: "omit"
+                });
+
+                const { event_id } = await request.json();
+                const response = await this.awaitPipeline(pipeline, event_id);
+                result = JSON.parse(response[0]);
+            } catch (error) {
+                console.log(error);
+                retries--;
             }
         }
-        if (result) {
-            console.log({sequence: data.sequence, hypothesisTemplate: data.hypothesis_template, labels: result.labels, scores: result.scores});
-        } else {
-            console.warn('Disconnected from Hugging Face pipeline. Difficulty defaulting to 0');
-        }
+
+        console.log(result);
         return result;
     }
 
